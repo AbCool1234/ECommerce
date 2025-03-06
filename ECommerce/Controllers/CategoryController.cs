@@ -32,7 +32,11 @@ namespace ECommerce.Controllers
             return View(datas);
         }
 
-
+        public IActionResult Page(int id)
+        {
+            List<ProductItem> data = _db.ProductItem.Where(x => x.CategoryId == id).ToList();
+            return View(data);
+        }
         public JsonResult Save(int id, string categoryName, string categoryCode)
         {
             if (id == 0)

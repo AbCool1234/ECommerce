@@ -1,45 +1,161 @@
 ﻿@model IEnumerable<ECommerce.Models.ProductOrderMasterVM>
 
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-body">
-                <table class="table table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Fullname</th>
-                            <th>Mobile No</th>
-                            <th>Order Date</th>
-                            <th>Grand Total</th>
-                            <th>Item No</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.ProductOrderMasterID</td>
-                                <td>@item.Fullname</td>
-                                <td>@item.MobileNo</td>
-                                <td>@item.OrderDate</td>
-                                <td>@item.GrandTotal</td>
-                                <td>@item.ItemCount</td>
-                            
-                                <td>@item.PaymentStatus</td>
-                                <td>@item.Tid</td>
-                                <td>
-                                    <button class="btn btn-success btn-sm btnView" data-toggle=" modal" data-target="#exampleModal" data-key="@item.ProductOrderMasterID">
-                                        <i class="fa fa-eye"></i> VIEW ITEM
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+@* <div class="row"> *@
+@*     <div class="col-md-12"> *@
+@*         <div class="card"> *@
+@*             <div class="card-body"> *@
+@*                 <table class="table table-hover table-striped"> *@
+@*                     <thead> *@
+@*                         <tr> *@
+@*                             <th>ID</th> *@
+@*                             <th>Fullname</th> *@
+@*                             <th>Mobile No</th> *@
+@*                             <th>Order Date</th> *@
+@*                             <th>Grand Total</th> *@
+@*                             <th>Item No</th> *@
+@*                             <th>PaymentStatus</th> *@
+@*                             <th>Tid</th> *@
+@*                             <th>values</th> *@
+
+@*                             <th>Action</th> *@
+
+@*                         </tr> *@
+@*                     </thead> *@
+@*                     <tbody> *@
+@*                         @foreach (var item in Model) *@
+@*                         { *@
+@*                             <tr> *@
+@*                                 <td>@item.ProductOrderMasterID</td> *@
+@*                                 <td>@item.Fullname</td> *@
+@*                                 <td>@item.MobileNo</td> *@
+@*                                 <td>@item.OrderDate</td> *@
+@*                                 <td>@item.GrandTotal</td> *@
+@*                                 <td>@item.ItemCount</td> *@
+
+@*                                 <td>@item.PaymentStatus</td> *@
+@*                                 <td>@item.Tid</td> *@
+@*                                 <td> *@
+@*                                     @foreach(var item1 in item.Item) *@
+@*                                     { *@
+@*                                         <td>@item1.UnitPrice</td> *@
+
+@*                                     } *@
+@*                                 </td> *@
+@*                                 <td> *@
+@*                                     <button class="btn btn-success btn-sm btnView" data-toggle=" modal" data-target="#exampleModal" data-key="@item.ProductOrderMasterID"> *@
+@*                                         <i class="fa fa-eye"></i> VIEW ITEM *@
+@*                                     </button> *@
+@*                                 </td> *@
+@*                             </tr> *@
+@*                         } *@
+@*                     </tbody> *@
+@*                 </table> *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Order Items</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4>Ordered Items:</h4>
+                <ul id="modalItemList"></ul> <!-- This will display ordered items -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Fullname</th>
+            <th>Mobile No</th>
+            <th>Order Date</th>
+            <th>Grand Total</th>
+            <th>Item No</th>
+            <th>PaymentStatus</th>
+            <th>Tid</th>
+            @* <th>Product Name</th> <!-- Added column for Product Name --> *@
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductOrderMasterID</td>
+                <td>@item.Fullname</td>
+                <td>@item.MobileNo</td>
+                <td>@item.OrderDate</td>
+                <td>@item.GrandTotal</td>
+                <td>@item.ItemCount</td>
+                <td>@item.PaymentStatus</td>
+                <td>@item.Tid</td>
+                
+                @* <!-- Display Product Names --> *@
+                @* <td> *@
+                @*     @foreach(var itemDetail in item.ItemDetails) *@
+                @*     { *@
+                @*         <div>@itemDetail.ProductName</div>  <!-- Display ProductName here --> *@
+                @*     } *@
+                @* </td> *@
+
+                <td>
+        <td>
+    <button class="btn btn-success btn-sm btnView" data-toggle="modal" data-target="#exampleModal" data-key="@item.ProductOrderMasterID">
+        <i class="fa fa-eye"></i> VIEW ITEM
+    </button>
+</td>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+<script>
+    $(document).ready(function () {
+        // When the "VIEW ITEM" button is clicked
+        $(".btnView").click(function () {
+            var orderId = $(this).data("key");
+
+            // Make an AJAX call to fetch the order details using the orderId
+            $.ajax({
+                url: '/ProductOrder/GetOrderItems',  // The URL where the server will fetch the items
+                type: 'GET',
+                data: { id: orderId },
+                success: function (data) {
+                    // Clear the existing items in the modal
+                    $('#modalItemList').empty();
+                    debugger;
+                    // If data is not empty, add items to the modal
+                    if (data && data.length > 0) {
+                        data.forEach(function (item) {
+                            console.log(item)
+                            console.log(item.productName)
+                            console.log(item.quantity)
+                            console.log(item.unitprice)
+                            $('#modalItemList').append('<li>' + item.productName + ' - Quantity: ' + item.quantity + ', Unit Price: ' + item.unitPrice + '</li>');
+                        });
+                    } else {
+                        $('#modalItemList').append('<li>No items found for this order.</li>');
+                    }
+                }
+            });
+        });
+    });
+</script>
+}

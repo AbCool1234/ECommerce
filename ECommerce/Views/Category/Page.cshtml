@@ -1,0 +1,28 @@
+﻿@*
+    For more information on enabling MVC for empty itemjects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@foreach(var item in Model)
+{
+    
+<h1></h1
+><h1></h1
+><h1></h1>
+<h1></h1>
+<div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <img src="@item.Thumbnail" style="width:100%" />
+                <label>@item.ProductName</label>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-primary btn-sm btnCart" data-name="@item.ProductName" data-price="@item.UnitPrice" data-pk="@item.ProductItemId"><i class="fa fa-shopping-cart"></i> CART</button>
+                <button type="button" class="btn btn-success btn-sm btnView" data-pk="@item.ProductItemId" style="float:right"><i class="fa fa-eye"></i> VIEW</button>
+            </div>
+        </div>
+    </div>
+    </div>
+}

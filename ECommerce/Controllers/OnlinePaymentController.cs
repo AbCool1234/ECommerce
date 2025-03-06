@@ -39,7 +39,9 @@ namespace ECommerce.Controllers
         public async Task<object> KhaltiPaymentInitiate([FromBody] KhaltiPaymentInitVM vm)
         {
 
-            string khalti_pri_key = "b7a497bf84fa4ca7b034bba23c2709ae";
+            //string khalti_pri_key = "b7a497bf84fa4ca7b034bba23c2709ae";
+            string khalti_pri_key = "23c3db9b228f4b88ac1ca9c2ecfa3b95";
+
 
             //var url = "https://khalti.com/api/v2/epayment/initiate/";
 

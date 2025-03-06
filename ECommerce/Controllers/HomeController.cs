@@ -17,12 +17,12 @@ namespace ECommerce.Controllers
 
         public IActionResult Index()
         {
-            DashboardVM vm = new DashboardVM();
+           DashboardVM vm = new DashboardVM();
 
             vm.CategoryInfo = _context.Category.ToList();
             vm.ProductItem = _context.ProductItem.ToList();
 
-            return View(vm);
+            return View(vm); 
         }
 
         public IActionResult Privacy()

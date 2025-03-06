@@ -94,12 +94,14 @@
                         alert(res.message)
                         clearForm();
                         loadTableData();
+                 window.location.reload();
                     },
                     error: function (er) {
                         debugger;
                     }
                 });
             }
+
         })
 
         $(document).on('click', '.btnCancel', function () {

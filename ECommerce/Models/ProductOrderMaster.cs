@@ -34,5 +34,7 @@ namespace ECommerce.Models
 
         public string Tid { get; set; }
 
+        public List<ProductOrderDetailVM> ItemDetails { get; set; }
+
     }
 }
