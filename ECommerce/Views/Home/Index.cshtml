@@ -1,0 +1,79 @@
+﻿@model ECommerce.Models.ViewModel.DashboardVM
+
+
+<div class="row">
+    <div class="col-md-3">
+        <table class="table">
+            @foreach (var item in Model.CategoryInfo)
+            {
+                <tr>
+                    <td>
+                        @item.CategoryName
+                    </td>
+                 </tr>
+            }
+
+        </table>
+    </div>
+    <div class="col-md-9">
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://img.lazcdn.com/us/domino/c43e1348-5647-4ed4-986b-452c17256269_NP-1976-688.jpg_2200x2200q80.jpg" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://img.lazcdn.com/us/domino/c43e1348-5647-4ed4-986b-452c17256269_NP-1976-688.jpg_2200x2200q80.jpg" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://img.lazcdn.com/us/domino/c43e1348-5647-4ed4-986b-452c17256269_NP-1976-688.jpg_2200x2200q80.jpg" class="d-block w-100" alt="...">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    @foreach (var cat in Model.CategoryInfo)
+    {
+        <div class="col-md-12  mt-3">
+            <h4>@cat.CategoryName</h4>
+            <div class="row">
+
+                @foreach (var pro in Model.ProductItem.Where(x => x.CategoryId == cat.CategoryID).ToList())
+                {
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <img src="@pro.Thumbnail"  style="width:100%"/>
+                                <label>@pro.ProductName</label>
+                            </div>
+                            <div class="card-footer">
+                                <button type="button" class="btn btn-primary btn-sm btnCart" data-name="@pro.ProductName" data-price="@pro.UnitPrice" data-pk="@pro.ProductItemId"><i class="fa fa-shopping-cart"></i> CART</button>
+                                <button type="button" class="btn btn-success btn-sm btnView" data-pk="@pro.ProductItemId" style="float:right"><i class="fa fa-eye"></i> VIEW</button>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+        </div>
+
+    }
+</div>
+

@@ -1,0 +1,45 @@
+﻿@model IEnumerable<ECommerce.Models.ProductOrderMasterVM>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fullname</th>
+                            <th>Mobile No</th>
+                            <th>Order Date</th>
+                            <th>Grand Total</th>
+                            <th>Item No</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.ProductOrderMasterID</td>
+                                <td>@item.Fullname</td>
+                                <td>@item.MobileNo</td>
+                                <td>@item.OrderDate</td>
+                                <td>@item.GrandTotal</td>
+                                <td>@item.ItemCount</td>
+                            
+                                <td>@item.PaymentStatus</td>
+                                <td>@item.Tid</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm btnView" data-toggle=" modal" data-target="#exampleModal" data-key="@item.ProductOrderMasterID">
+                                        <i class="fa fa-eye"></i> VIEW ITEM
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,165 @@
+﻿@model IEnumerable<ECommerce.Models.Category>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <td>Category Name</td>
+                            <td>Category Code</td>
+                            <td>Created Date</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (Category item in Model)
+                        {
+                            <tr>
+                                <td>@item.CategoryName</td>
+                                <td>@item.CategoryCode</td>
+                                <td>@item.CreatedDate</td>
+                                <td>
+                                    <button type="button" data-key="@item.CategoryID" class="btn btn-warning btn-sm btnEdit">
+                                        EDIT
+                                    </button>
+                                    <button type="button" data-key="@item.CategoryID" class="btn btn-danger btn-sm btnDelete">
+                                        DELETE
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        Name
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control txtName" />
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-3">
+                        Code
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control txtCode" />
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-9">
+                        <button type="button" class="btn btn-success" id="btnSave">SAVE</button>
+                        <button type="button" class="btn btn-danger btnCancel">CANCEL</button>
+                        <input type="hidden" class="hdnId" value="0"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+       
+
+        $(document).on('click', '#btnSave', function () {
+            var name = $('.txtName').val();
+            var code = $('.txtCode').val();
+            var id = $('.hdnId').val();
+
+            if (name == '') {
+                alert('Please enter Category Name')
+            } else if (code == '') {
+                alert('Pleae enter category code')
+            } else {
+                $.ajax({
+                    method: 'get',
+                    url: '@Url.Action("Save", "Category")?categoryName=' + name + '&categoryCode=' + code + '&id=' + id,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (res) {
+                        alert(res.message)
+                        clearForm();
+                        loadTableData();
+                    },
+                    error: function (er) {
+                        debugger;
+                    }
+                });
+            }
+        })
+
+        $(document).on('click', '.btnCancel', function () {
+            var ok = confirm('Are you sure to clear form?')
+            if (ok == true) {
+                $('.txtName').val('');
+                $('.txtCode').val('');
+            }
+        });
+
+        $(document).on('click', '.btnDelete', function () {
+            var id = $(this).data('key');
+            var ok = confirm('Are you sure to delete data?');
+            if (ok) {
+                $.ajax({
+                    method: 'get',
+                    url: '@Url.Action("Delete", "Category")?id=' + id,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (res) {
+                        alert(res.message)
+                        loadTableData();
+                    },
+                    error: function (er) {
+                        debugger;
+                    }
+                });
+            }
+           
+        })
+
+        function clearForm() {
+            $('.txtName').val('')
+            $('.txtCode').val('')
+            $('.hdnId').val('0')
+        }
+
+
+        $(document).on('click', '.btnEdit', function () {
+            var id = $(this).data('key');
+
+            $.ajax({
+                method:'get',
+                contentType: "application/json; charset=utf-8",
+                url:'@Url.Action("GetById","Category")?id=' + id,
+                success: function (res) {
+                    if (res.success == false) {
+                        alert(res.message);
+                    } else {
+                        var dbData = res.data;
+
+                        $('.txtName').val(dbData.categoryName);
+                        $('.txtCode').val(dbData.categoryCode);
+                        $('.hdnId').val(dbData.categoryID)
+                    }
+                },
+                error: function (er) {
+                
+                }
+            });
+        });
+    </script>
+
+}

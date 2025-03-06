@@ -1,0 +1,139 @@
+﻿@model ECommerce.Models.ViewModel.OrderVM
+
+
+
+<div class="text-center mb-4">
+    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-white shadow-sm" style="width: 60px; height: 60px;">
+        @* <i class="fa fa-check text-success" style="font-size: 40px;"> </i> *@
+        <span class="bi bi-check2 text-success fs-2"></span>
+    </div>
+    <h2 class="mt-3 fw-bold">Thank You </h2>
+    <p class="text-muted">Order has been placed successfully.</p>
+</div>
+
+<div class="row">
+    <!-- Left Side: Order Summary and Details (Stacked) -->
+    <div class="col-md-8">
+        <!-- Order Summary -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h4 class="card-title ">Order Summary</h4>
+                <table class="table">
+                    <tbody>
+                        <input type="hidden" class="ProductOrderMID" value="@Model.mast.ProductOrderMasterID" />
+                        <tr><td><strong>Fullname:</strong></td><td class="fullName">@Model.mast.Fullname</td></tr>
+                        <tr><td><strong>Mobile No:</strong></td><td class="mobileNo">@Model.mast.MobileNo</td></tr>
+                        <tr><td><strong>Email:</strong></td><td class="email">@Model.mast.Email</td></tr>
+                        <tr><td><strong>Payment :</strong></td><td class="status">@Model.mast.PaymentStatus</td></tr>
+                        <tr><td><strong>Address:</strong></td><td>@Model.mast.Address</td></tr>
+                        <tr><td><strong>Order Date:</strong></td><td class="date">@Model.mast.OrderDate</td></tr>
+                        <tr>
+                            <td><strong>Grand Total:</strong></td>
+                            <td class=" grandTotal fw-bold" data-amount="@Model.mast.GrandTotal">
+                                Rs. @Model.mast.GrandTotal
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Order Details -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h4 class="card-title">Order Details</h4>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Product Item ID</th>
+                                <th>Product Name</th>
+                                <th>Unit Price</th>
+                                <th>Quantity</th>
+                                <th>Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.dtls)
+                            {
+                                <tr>
+                                    <td>@item.ProductOrderDetailID</td>
+                                    <td>@item.ProductItemId</td>
+                                    <td>@item.ProductName</td>
+                                    <td>Rs. @item.UnitPrice</td>
+                                    <td>@item.Quantity</td>
+                                    <td class=" fw-bold">Rs. @item.TotalPrice</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        @if(Model.mast.PaymentStatus=="payed"){
+
+             <div class="card">
+                <h3>Order has already been Payed</h3>
+
+            </div>
+        }
+        else
+        {
+                        <div class="card ">
+                <button class="btn btn-primary txtKhalti">
+                    Pay with Khalti
+                </button>
+
+            </div>
+        }
+    </div>
+
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                loadItems();
+                CalcuateAndShowTotal();
+            });
+
+
+
+            $(document).on('click', '.txtKhalti', function () {
+                debugger;
+                  var amount = parseFloat($('.grandTotal').data('amount'));
+                   var purchase_order_id = $('.ProductOrderMID').val();
+                var ok = confirm('Are you sure to pay via Khalti?')
+                if (ok) {
+                    var payload = {
+                        Amount: amount,
+                        RedirectUrl: 'http://localhost:5136',
+                        PurchaseOrderId: purchase_order_id
+
+                    };
+                    $.ajax({
+                        method: 'post',
+                        contentType: "application/json; charset=utf-8",
+                        url: '@Url.Action("KhaltiPaymentInitiate", "OnlinePayment")',
+                        data: JSON.stringify(payload),
+                        success: function (rsp) {
+                            if (rsp.success) {
+                                var khalti = JSON.parse(rsp.data);
+
+                                window.location.href = khalti.payment_url;
+                            }else{
+                                alert(rsp.message)
+                            }
+                        },
+                        error: function (er) {
+
+                        },
+                    });
+                }
+            });
+
+        </script>
+    }

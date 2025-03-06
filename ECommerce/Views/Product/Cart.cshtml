@@ -1,0 +1,130 @@
+﻿
+
+<div class="row">
+    <div class="col-md-8">
+        <button type="button" class="btn btn-danger btnClearCart">
+            Clear Cart
+        </button>
+
+        <button type="button" class="btn btn-success btnCheckout">
+            CHECK-OUT
+        </button>
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="body-item">
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12" style="text-align:right">
+                        <span>Grand Total: </span>
+                        <span style="color:green;font-weight:bold;font-size:50px;" class="tdGrandTotal"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="mdlCheckout" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        Fullname
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control txtCartFullname" />
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        Mobile No
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control txtCartMobileNo" />
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        Email
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control txtCartEmail" />
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        Address
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control txtCartAddress" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @* <button type="button" class="btn btn-success txtKhalti">Pay With Khalti</button> *@
+                <button type="button" class="btn btn-primary txtCartSubmit">SUBMIT</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            loadItems();
+            CalcuateAndShowTotal();
+        });
+
+
+
+        $(document).on('click', '.txtKhalti', function () {
+            var ok = confirm('Are you sure to pay via Khalti?')
+            if (ok) {
+                var payload = {
+                    Amount: +$('.tdGrandTotal').html(),
+                    RedirectUrl: 'http://localhost:5136',
+
+                };
+                $.ajax({
+                    method: 'post',
+                    contentType: "application/json; charset=utf-8",
+                    url: '@Url.Action("KhaltiPaymentInitiate", "OnlinePayment")',
+                    data: JSON.stringify(payload),
+                    success: function (rsp) {
+                        if (rsp.success) {
+                            var khalti = JSON.parse(rsp.data);
+
+                            window.location.href = khalti.payment_url;
+                        }else{
+                            alert(rsp.message)
+                        }
+                    },
+                    error: function (er) {
+
+                    },
+                });
+            }
+        });
+
+    </script>
+}

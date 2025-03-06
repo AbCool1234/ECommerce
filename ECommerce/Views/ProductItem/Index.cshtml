@@ -1,0 +1,209 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IEnumerable<ECommerce.Models.ProductItem>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>SN</td>
+                            <td>Product Name</td>
+                            <td>Product Code</td>
+                            <td>Category</td>
+                            <td>Description</td>
+                            <td>Unit Price</td>
+                            <td>Thumbnail</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- No foreach here, data will be loaded using JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group">
+                    <div>
+                        <label for="ProductName" class="row-2">Product Name</label>
+                        <input type="text" class="form-control txtName" id="ProductName" placeholder="Enter Product Name">
+                    </div>
+                    <div>
+                        <label for="ProductCode" class="row-2">Product Code</label>
+                        <input type="text" class="form-control txtCode" id="ProductCode" placeholder="Enter Product Code">
+                    </div>
+                    <div>
+                        <label for="CategoryId" class="row-2">Category</label>
+                        <input type="number" class="form-control txtCategory" id="CategoryId" placeholder="Enter Category ID">
+                    </div>
+                    <div>
+                        <label for="Description" class="row-2">Description</label>
+                        <textarea class="form-control txtDescription" id="Description" placeholder="Enter Product Description"></textarea>
+                    </div>
+                    <div>
+                        <label for="UnitPrice" class="row-2">Unit Price</label>
+                        <input type="number" class="form-control txtPrice" id="UnitPrice" placeholder="Enter Unit Price">
+                    </div>
+                    <div>
+                        <label for="Thumbnail" class="row-2">Thumbnail URL</label>
+                        <input type="text" class="form-control txtThumbnail" id="Thumbnail" placeholder="Enter Image URL">
+                    </div>
+                    <div class="row-2 mt-2">
+                        <input type="hidden" class="hdnId" />
+                        <button type="submit" class="btn btn-success btnSave">Save</button>
+                        <button type="button" class="btn btn-danger btnCancel">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            loadTable();
+        });
+
+        function loadTable() {
+            $.ajax({
+                method: 'GET',
+                url: '/ProductItem/GetProductItems',
+                success: function (res) {
+                    var tableBody = $("table tbody");
+                    tableBody.empty();
+                    $.each(res.data, function (index, product) {
+                         var row = `<tr>
+                                    <td>${index + 1}</td>
+                                    <td>${product.productName}</td>
+                                    <td>${product.productCode}</td>
+                                    <td>${product.categoryId}</td>
+                                    <td>${product.description}</td>
+                                    <td>${product.unitPrice}</td>
+                                    <td><img src="${product.thumbnail}" alt="Thumbnail" width="50"></td>
+                                    <td>
+                                        <button class="btn btn-warning btnEdit" data-key="${product.productItemId}">Edit</button>
+                                        <button class="btn btn-danger btnDlt" data-key="${product.productItemId}">Delete</button>
+                                    </td>
+                                </tr>`;
+
+                        tableBody.append(row);
+                    });
+
+                    //$("table tbody").html(row)
+                },
+                error: function () {
+                    alert("Failed to load data!");
+                }
+            });
+        }
+
+        function clearForm() {
+            $(".txtName").val("");
+            $(".txtCode").val("");
+            $(".txtCategory").val("");
+            $(".txtDescription").val("");
+            $(".txtPrice").val("");
+            $(".txtThumbnail").val("");
+            $(".hdnId").val("0");
+        }
+
+        $(document).on("click", ".btnEdit", function () {
+            var id = $(this).data('key');
+
+            $.ajax({
+                method: 'GET',
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("Edit", "ProductItem")?id=' + id,
+                success: function (res) {
+                    if (res.success == false) {
+                        alert(res.message);
+                    } else {
+                        $(".txtName").val(res.data.productName);
+                        $(".txtCode").val(res.data.productCode);
+                        $(".txtCategory").val(res.data.categoryId);
+                        $(".txtDescription").val(res.data.description);
+                        $(".txtPrice").val(res.data.unitPrice);
+                        $(".txtThumbnail").val(res.data.thumbnail);
+                        $(".hdnId").val(res.data.productItemId);
+                    }
+                },
+                error: function (res) {
+                    alert(res.message);
+                }
+            });
+        });
+
+        $(document).on("click", ".btnDlt", function () {
+            var id = $(this).data('key');
+
+            $.ajax({
+                method: 'GET',
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("Delete", "ProductItem")?id=' + id,
+                success: function (res) {
+                    loadTable();
+                    alert(res.message);
+                },
+                error: function (res) {
+                    alert(res.message);
+                }
+            });
+        });
+
+        $(document).on("click", ".btnCancel", function () {
+            var ok = confirm("Are you sure you want to cancel?");
+            if (ok) {
+                clearForm();
+                alert("Cancelled");
+            } else {
+                alert("Not Cancelled");
+            }
+        });
+
+        $(document).on("click", ".btnSave", function () {
+            var name = $(".txtName").val();
+            var code = $(".txtCode").val();
+            var category = $(".txtCategory").val();
+            var description = $(".txtDescription").val();
+            var price = $(".txtPrice").val();
+            var thumbnail = $(".txtThumbnail").val();
+            var hiddenId = $(".hdnId").val();
+
+            if (name == "" || code == "" || category == "" || price == "" || thumbnail == "") {
+                alert("Please fill all required fields.");
+            } else {
+                $.ajax({
+                    method: 'GET',
+                    url: '@Url.Action("Save", "ProductItem")?hiddenId=' + hiddenId +
+                        '&ProductName=' + name +
+                        '&ProductCode=' + code +
+                        '&CategoryId=' + category +
+                        '&Description=' + description +
+                        '&UnitPrice=' + price +
+                        '&Thumbnail=' + thumbnail,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        if (response.success == true) {
+                            loadTable();
+                            clearForm();
+                        }
+                        alert(response.message);
+                    },
+                    error: function (response) {
+                        alert(response.message);
+                    }
+                });
+            }
+        });
+    </script>
+}
