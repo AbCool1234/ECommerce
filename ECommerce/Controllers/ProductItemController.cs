@@ -148,6 +148,11 @@ namespace ECommerce.Controllers
             return Json(new { data = datas });
         }
 
+        public IActionResult Page(int id)
+        {
+            var datas = _context.ProductItem.Where(x => x.ProductItemId == id).FirstOrDefault();
+            return View(datas);
+        }
         public JsonResult Save(int hiddenId, string ProductName, string ProductCode, int CategoryId, string description, decimal UnitPrice, string Thumbnail)
         {
             if (hiddenId == 0)
